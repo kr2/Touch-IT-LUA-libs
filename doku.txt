@@ -1,0 +1,55 @@
+--[[
+ knx-functions:
+
+	knx.get_string(a,b,...) -- get the string from the objects a,b,c...
+ 	EX:
+     	X,Y,Z=knx.get_string(222,223,224)
+
+	knx.set_string(a,b) -- sets the string of object a to the value b
+	EX:
+     	knx.set_string('Hallo Welt!' .. 3)
+
+	knx.get_integer(a,b,...) -- get the integer values from the objects a,b,c...
+ 	EX:
+     	 X,Y,Z=knx.get_integer(222,223,224)
+
+ 	knx.get_float(a,b,...) -- get the float values from the objects a,b,c...
+ 	EX:
+     	 X,Y,Z=knx.get_float(250,251,251)
+
+     	knx.set_integer(a,b,c) -- sets the object number a, of length b=1..4 to value c
+
+     	knx.set_float(a,b) -- sets the value of object a to the value b
+     	knx.dpt9_to_int(a) -- convert the 2-byte-float value a to integer
+	EX:
+	 b=dpt9_to_int(a);
+
+     	knx.int_to_dpt9(a) -- convert the integer a into the 2-byte-float value
+	EX:
+	 b=knx.int_to_dpt9(a)
+
+	knx.tx_idle(a) -- test if the object Nr. a is transmitted and idle
+
+system-functions:
+
+	sys.timeout(a[,b]) -- set timeout of length a(ms) ,
+		       the callback timeout is called after a ms.
+		       If b is defined, this integer is handed over to timeout(x)
+	sys.set_page(a) -- jump to page Nr. a
+	sys.set_brightness(a) -- set brightness to a %
+	sys.beep(a,{,b[,c]}) -- beep for a ms, with b Hz and c volume(0..15)
+	sys.put_setting(a,b) -- put Setting with name a to the value b
+	sys.get_setting(a) -- get the setting-value of (a) and return as a string
+	sys.signal_obj(a) -- signal the internal object a to have changed
+	sys.message(a) -- open a Message-Dialog with text a displayed
+	sys.settings_dialog("table") -- open a settings-dialog for table "table"
+callbacks:
+
+	knx_value_changed(x) -- is called as the knx-value changed on logical object x
+	knx_value_update(x) -- is called as the knx-value is updated on logical object x
+	timeout(x) -- is called as soon an a sys.timeout() occures. x is 0 or as set in
+		      sys.timeout(a[,b]). return 1 to stop the timeout-source 0 to continue
+		      cyclically.
+	settings_set("x") -- settings changed on table with name "x"
+
+--]]
