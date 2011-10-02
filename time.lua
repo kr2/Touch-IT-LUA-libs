@@ -21,7 +21,7 @@
 *
 * @brief 	timer functions
 *
-* functions to gets system uptime
+* functions to gets system uptime.
 --]]
 
 
