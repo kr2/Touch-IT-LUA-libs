@@ -24,7 +24,9 @@ end
 
 ------------- OBJECT NUMMBERS -------
 -- if there is an |LOGIC_OBJ| in the comment the object have to be one of the logic objects in the ETS application 
-Example_ObjNr                = 240 -- [IN][2 Byte floate |LOGIC_OBJ|]
+temp_ObjNr                = 240 -- [IN][2 Byte floate |LOGIC_OBJ|]
+hum_ObjNr                = 241 -- [IN][2 Byte floate |LOGIC_OBJ|]
+co_ObjNr                = 248 -- [IN][2 Byte floate |LOGIC_OBJ|]
 
 
 settings={
@@ -37,42 +39,54 @@ function settings_set(x)
 
 end
 
+
+
+require 'SDcard'
+require 'fileSystemHelper'
+require 'KNXhelper'
+require 'time'
+
+SDrootDir = SDcard.getRootDir()   -- mounts the sd carde if neccery
+
+time.sleep(2)
+
+fileSystemHelper.mkfile(SDrootDir,"log.csv")
+temp = SDrootDir .. "log.csv"
+time.sleep(2)
+
+file, e = io.open(temp,"a")
+file:write("\n \n")
+file:write("New Log: \n")
+file:write("Date; Time; ObjNr; Value; Comment \n")
+file:flush()
+file:close()
+
+
+time.sleep(10)
+sys.message("mounted and first lines done")
+
 -------------------------------------------------------------------------------------------------
 
 function timeout(x)
-
-	
+    file, e = io.open(temp,"a")
+    file:write(os.date("%x") .."; " .. os.date("%X") .."; " .. temp_ObjNr .."; " .. KNXhelper.get_2Bfloat(temp_ObjNr) .."; Temperature \n")
+    file:write(os.date("%x") .."; " .. os.date("%X") .."; " .. hum_ObjNr .."; " .. KNXhelper.get_2Bfloat(hum_ObjNr) .."; Humidity \n")
+    file:write(os.date("%x") .."; " .. os.date("%X") .."; " .. co_ObjNr .."; " .. knx.get_float(co_ObjNr) .."; CO2 \n")
+	file:flush()
+    file:close()
 	return 0
 end
 if _isSimulation then _CallBackTimeout = timeout end
 
--------------------------------------------------------------------------------------------------
---------------------------------- knx_value_changed ----------------------------------------------
-function knx_value_changed(x)
-
-	if (x == Example_ObjNr) then
-
-	end
-
-end 
-if _isSimulation then _CallBackKnx_value_changed = knx_value_changed end
-
-
-
-
--------------------------------------------------------------------------------------------------
---------------------------------- knx_value_update ----------------------------------------------
-function knx_value_update(x)
-
-end
-if _isSimulation then _CallBackKnx_value_update = knx_value_update end
 
 
 
 if _isSimulation then Simulator.init() end
 
 
-sys.timeout(TIMECYCLEsec * 1000)
+
+
+sys.timeout(60 * 1000)
 
 
 
